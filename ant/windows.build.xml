@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<project name="amalgam" default="jar">
+  <description>
+     Build and Deploy a version of Amalgam
+  </description>
+
+  <property name="build.compiler" 	value="jikes"/>
+  <property name="ROOT.DIR"   		value="../"/>
+  <property name="SOURCE"   		value="${ROOT.DIR}/src"/>
+  <property name="COMPILE.DIR"      	value="${ROOT.DIR}/jar.classes"/>
+  <property name="JAR.DIR"      	value="${ROOT.DIR}/jar"/>
+  <property name="JAR.FILE"      	value="${JAR.DIR}/lightsOn.jar" />
+  <property name="MAIN.CLASS"      	value="com.gsoft.games.lightson.LightsOn" />
+  <property name="IMAGE.ROOT"      	value="${ROOT.DIR}/src/com/gsoft/games/lightson/" />
+  <property name="IMAGE.HOME"      	value="${ROOT.DIR}/jar.classes/com/gsoft/games/lightson/" />
+<!--  <property name="CLASSPATH"      	value="/usr/local/beans/amalgam/lib/hsqldb.jar" />  -->
+
+ <property name="USER.NAME"      	value="Steve Gee"/>
+ <property name="USER.EMAIL"      	value="ioexcept@yahoo.com"/>
+
+ <target name="all" depends="clean, jar"/>
+
+ <target name="clean" description="Wipe out the local working copy">
+    <delete dir="${COMPILE.DIR}"/>
+    <mkdir dir="${COMPILE.DIR}"/>
+    <mkdir dir="${JAR.DIR}"/>
+    <delete file="${JAR.FILE}"/>
+  </target>
+
+ <target name="compile" depends="clean" description="Compile the source">
+   	<javac srcdir="${SOURCE}"
+           destdir="${COMPILE.DIR}"
+           includes="*/**"
+  	/>
+	<delete dir="${COMPILE.DIR}\package cache"/>
+ </target>
+ <target name="imageCopy" depends="compile" description="Copy the images over to the compiled dir">
+   <copy file="${IMAGE.ROOT}\firstClick.jpg" 	todir="${IMAGE.HOME}"/>
+   <copy file="${IMAGE.ROOT}\logo.gif" 	        todir="${IMAGE.HOME}"/>
+   <copy file="${IMAGE.ROOT}\newGrid.jpg" 	todir="${IMAGE.HOME}"/>
+   <copy file="${IMAGE.ROOT}\secondClick.jpg" 	todir="${IMAGE.HOME}"/>
+   <copy file="${IMAGE.ROOT}\victory.jpg" 	todir="${IMAGE.HOME}"/>
+ </target>
+
+  <target name="jar" depends="imageCopy" description="jar the source">
+    <jar jarfile="${JAR.FILE}"
+  	     basedir="${COMPILE.DIR}"
+             includes="*/**">
+	     <manifest>
+	           <attribute name="Built-By"   value="${USER.NAME}"/>
+	           <attribute name="user-Email" value="${USER.EMAIL}"/>
+	           <attribute name="main-class" value="${MAIN.CLASS}"/>
+	     </manifest>
+	  </jar>
+  </target>
+</project>
